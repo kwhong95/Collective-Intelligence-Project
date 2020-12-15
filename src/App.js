@@ -1,11 +1,10 @@
 import React from 'react'
-
-import './App.css';
+import Search from './pages/Search';
 
 const App = () => {
   return (
     <div className="appContainer">
-      Hello React App
+      <Search />
     </div>
   )
 }

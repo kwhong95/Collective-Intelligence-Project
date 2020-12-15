@@ -18,3 +18,13 @@
 - api
 - redux
 - etc
+
+## 2. MainPage Layout 구성하기
+1. Pages - Search Page Layout
+- Title 설정 : Typography.Title(antd)
+- Settings Dropdown (antd)
+  + 로그아웃 버튼 구현
+  + 추후 로그인/회원가입 구현시 사용
+- 검색 기능을 사용할 Input 구현
+  + 진입시 바로 Input으로 포커싱 : Autofocus
+  + 서치 아이콘 구현
