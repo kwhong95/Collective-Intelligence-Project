@@ -68,3 +68,50 @@
   - AutoComplete를 `useSelctor`를 사용해 호출
     + map 함수로 데이터 순회
   -----------
+## 4. 사용자 페이지 구현하기
+1. **User Page**
+  - Ant-Design: PageHeader, Row, Col, Descriptions, Typography
+  - 표 형식의 이름, 소속, 태그, 수정 내역 등 유저 정보를 보여주는 페이지
+  - React-Router 기능을 이용해서 Search, User 페이지를 구분
+2. **UserInfo: Redux state**
+  - 위 autoComplete와 마찬가지로 Redux로 상태값을 관리
+  - 먼저 `user.state.js`에 **타입과 액션** 정의
+  - **Reducer 생성**: `setValueReducer(...)`
+  - 아직 기능하지 않는 `user.saga.js` 생성
+  - store에 생성한 Reducer와 Saga를 Combine 해줌
+3. **Search 페이지에서 사용자 검색시 User 페이지로의 전환**
+  - react-router-dom: `useHistory` 사용
+  - user 검색 시 autoComplete 배열을 find 함수로 user의 이름을  
+  찾은 뒤 일치하는 user 페이지로 이동: `history.push(...)` 사용
+  - 페이지 이동 전 dispatch 함수로 userAction 중 setValue 로  
+  유저의 정보를 먼저 세팅해줌: `dispatch(...)`
+4. **UserPage 와 연동하기**
+  - 리덕스에 저장되어 있는 유저 정보를 가져옴: `useSelector(...)`
+  - 유저 정보 헤더에 뒤로가기 버튼 활성화: `useHistory()`와 `history.goBack()`
+  - *여기서 문제 발생!!*
+    + Search 페이지에서 User 페이지로 이동 시 API 연동이 되지만  
+    User 페이지에서 User 페이지를 다시 로드할 때 연동이 되지 않음
+    + react-router의 match 속성을 이용하여 해결 가능
+      + match.params.name 을 유저의 name에 할당
+      + 리덕스에 액션인 fetchUser 기능을 추가하여 User 페이지를  
+      렌더할 때 마다 fetchUser를 실행시킴: `useEffect(...)`
+  - **Redux에 fetchUser 추가하기**
+    + 리덕스의 유저 상태 코드인 Types, Actions에 fetchUser를 할당
+    + FetchUser Type: 'user/FetchUser' 지정
+    + fetchUser Action: name 값을 Types.FetchUser에 전달
+  - **fetchUser Saga 기능 구현**
+    + 먼저 callApi로 API를 불러온 뒤, 유저의 name을 params인  
+    keyword 값에 할당하고 호출 성공과 data 정보가 있을 시  
+    data의 name값이 같은 정보를 찾아: `data.find(...)`  
+    리덕스 User Action인 setValue에 user 정보를 넣음: `put(...)`
+    + Search Saga 와 같이 fetchUser가 실행될 때 마다   
+    FetchUser Type과 fetchUser Action을 가져옴: `all([takeEvery(...)])`
+5. **존재 하지 않는 사용자 페이지에 접근 시**
+  - user의 정보가 존재할 때와 없을 때의 상황 부여
+    + `user === true`: 사용자 정보 페이지 렌더링
+    + `user === false(!user)` : 존재하지 않는 사용자 입니다.. 렌더링
+  - *여기서 문제 발생!*
+    + 존재하는 사용자의 페이지를 접근할 때 데이터를 불러 오기전까지  
+    존재하지 않는 사용자의 페이지가 렌더링되는 이슈가 발생
+    + `isFetched`, `isFetching` 이라는 상태를 구현해서  
+    성능 이슈를 해결할 예정

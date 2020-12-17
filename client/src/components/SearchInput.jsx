@@ -2,7 +2,9 @@ import React from 'react'
 import { Input, AutoComplete, Space, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions } from '../redux/state/search.state';
+import { useHistory } from 'react-router-dom';
+import { actions } from '../redux/state/search.state'
+import { actions as userActions } from '../redux/state/user.state';
 
 
 const SearchInput = () => {
@@ -17,12 +19,23 @@ const SearchInput = () => {
 
   const autoCompletes = useSelector(state => state.search.autoCompletes);
 
+  const history = useHistory();
+  const goToUser = (value) => {
+    const user = autoCompletes.find(item => item.name === value);
+    
+    if (user) {
+      dispatch(userActions.setValue('user', user));
+      history.push(`/user/${user.name}`);
+    }
+  }
+
   return (
     <AutoComplete 
       autoFocus
       style={{ width:"100%" }}
       value={keyword}
       onChange={setKeyword}
+      onSelect={goToUser}
       options={autoCompletes.map(item => ({
         value: item.name,
         label: (
