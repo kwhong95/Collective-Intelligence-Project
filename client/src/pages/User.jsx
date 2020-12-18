@@ -20,8 +20,6 @@ const User = ({ match }) => {
     dispatch(actions.fetchUser(name));
   }, [name])
 
-  const isFetched = true;
-
   return (
     <Row justify="center">
       <Col xs={24} md={20} lg={14}>

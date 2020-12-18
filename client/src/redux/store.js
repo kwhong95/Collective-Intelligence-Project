@@ -5,10 +5,13 @@ import searchReducer from  './state/search.state';
 import searchSaga from './saga/search.saga';
 import userReducer from './state/user.state';
 import userSaga from './saga/user.saga';
+import commonReducer from './state/fetch.state';
+
 
 const reducer = combineReducers({
   search: searchReducer,
   user: userReducer,
+  common: commonReducer,
 });
 const sagaMiddleware = createSagaMiddleware();
 

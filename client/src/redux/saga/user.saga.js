@@ -18,5 +18,11 @@ function* fetchUser ({ name }) {
 }
 
 export default function* () {
-  yield all([takeEvery(Types.FetchUser, fetchUser)]);
+  // yield all([takeEvery(Types.FetchUser, fetchUser)]);
+  yield all([
+    takeEvery(
+      Types.FetchUser,
+      makeFetchSaga({ fetchSaga: fetchUser, canCache: true }),
+    ),
+  ]);
 };
