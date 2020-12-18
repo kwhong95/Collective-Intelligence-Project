@@ -115,3 +115,37 @@
     존재하지 않는 사용자의 페이지가 렌더링되는 이슈가 발생
     + `isFetched`, `isFetching` 이라는 상태를 구현해서  
     성능 이슈를 해결할 예정
+-----------
+## 5. API 통신 상태값 관리하기: makeFetchSaga (코드 분석 중점)
+-----
+<img width="516" alt="스크린샷 2020-12-17 오후 4 26 00" src="https://user-images.githubusercontent.com/70752848/102456585-ba46e080-4084-11eb-96c8-a57570a88f87.png">
+
+1. **fetch 상태값 관리: Saga 에서 주로 처리**
+  - `all([takeEvery(...)])` 부분에서 makeFetchSaga 함수를 추가
+    + fetchSaga를 fetchUser로 설정
+    + canCache라는 파라미터를 추가로 설정
+  - **canCache** 란?
+    + true: 정해진 시간동안 해당 API가 응답하는 값을 캐싱  
+    액션이 발생 했을 때 API를 다시 호출하는 방식이 아닌  
+    그 캐싱된 데이터를 활용함
+    + 가장 중요한 역할은 **fetch 상태값을 관리 해줌**
+
+2. **makeFetchSaga 관련 코드 분석**
+  - **Redux에 fetch 관련 상태를 지정**함: Types, Actions
+  - Types(SetValue, SetIsSlow, SetFetchStatus): 'commom/...'
+  - Actions
+    + Setvalue : setValue 관련 액션을 생성하고 설정함
+    + setIsSlow : payload 로 입력해 설정
+    + setFetchStatus: 위와 동일
+  - 초기값으로 **fetch와 관련된 상태값** 설정 (fetchInfo)
+    > 각 액션마다 액션이 어떤 상태인지 나타냄
+    + fetchStatusMap(Request, Success, Fali)
+    + isSlowMap(boolean) : 설정한 시간동안 응답이 오지 않을 시 true
+    + totalCountMap : Pagination시 사용(추후 다룸)
+    + errorMessageMap : error가 있을 시 출력할 Message 저장
+    + nextPageMap : Pagination시 사용
+  - **Reducer 생성**
+    + SetFetchStatus 액션 발생 시 호출할 5가지 상태값 설정
+    + 각 상태의 해당 actionType 또는 fetchKey를 설정
+    
+
