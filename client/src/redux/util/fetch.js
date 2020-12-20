@@ -6,9 +6,9 @@ import { actions } from '../state/fetch.state';
 import { FETCH_KEY, FETCH_PAGE } from '../redux-helper';
 
 function makeCheckSlowSaga(actionType, fetchKey) {
-  return function* () { 
-    yield deley(500);
-    yield put (
+  return function* () {
+    yield delay(500);
+    yield put(
       actions.setIsSlow({
         actionType,
         fetchKey,
@@ -27,7 +27,6 @@ const SAGA_CALL_TYPE = call(() => {}).type;
 function getIsCallEffect(value) {
   return value && value.type === SAGA_CALL_TYPE;
 }
-
 export function makeFetchSaga({
   fetchSaga,
   canCache,
@@ -55,7 +54,7 @@ export function makeFetchSaga({
       }
       if (getIsCallEffect(value) && value.payload.fn === callApi) {
         yield put(
-          actions.SetFetchStatus({
+          actions.setFetchStatus({
             actionType,
             fetchKey,
             status: FetchStatus.Request,
@@ -63,7 +62,7 @@ export function makeFetchSaga({
         );
         const apiParam = value.payload.args[0];
         const cacheKey = getApiCacheKey(actionType, apiParam);
-        let apiResult = 
+        let apiResult =
           canCache && apiCache.has(cacheKey)
             ? apiCache.get(cacheKey)
             : undefined;
@@ -90,7 +89,7 @@ export function makeFetchSaga({
             status: isSuccess ? FetchStatus.Success : FetchStatus.Fail,
             totalCount,
             nextPage: isSuccess ? page + 1 : page,
-            errorMassage: isSuccess ? '' : apiResult.resultMessage,
+            errorMessage: isSuccess ? '' : apiResult.resultMessage,
           };
         }
       } else if (value !== undefined) {
@@ -104,7 +103,7 @@ export function makeFetchSaga({
         }
 
         if (params) {
-          yield put(actions.SetFetchStatus(params));
+          yield put(actions.setFetchStatus(params));
         }
         break;
       }
@@ -112,7 +111,7 @@ export function makeFetchSaga({
   };
 }
 
-// 쿼리 파라미터 순서가 바뀌어도 같이 key가 나오도록 키 이름으로 정렬한다.
+// 쿼리 파라미터 순서가 바뀌어도 같은 key가 나오도록 키 이름으로 정렬한다
 export function getApiCacheKey(actionType, { apiHost, url, params }) {
   const prefix = `${actionType}_${apiHost ? apiHost + url : url}`;
   const keys = params ? Object.keys(params) : [];
@@ -142,12 +141,12 @@ function getIsGeneratorFunction(obj) {
   ) {
     return true;
   }
-  const photo = constructor.prototype;
-  return 'funtion' === typeof proto.next && 'function' === typeof proto.throw;
+  const proto = constructor.prototype;
+  return 'function' === typeof proto.next && 'function' === typeof proto.throw;
 }
 
 /**
- * 
+ *
  * @param {string=} actionType
  */
 export function deleteApiCache(actionType) {
