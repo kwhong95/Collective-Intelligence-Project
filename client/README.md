@@ -178,15 +178,43 @@
   <img width="378" alt="스크린샷 2020-12-20 오후 9 33 08" src="https://user-images.githubusercontent.com/70752848/102713350-04d98e80-430b-11eb-819b-4d7684757686.png">
 
     + Network에 Slow 3G로 변경하고 IsSlow 상태 확인하기
-    <img width="353" alt="스크린샷 2020-12-20 오후 9 40 16" src="https://user-images.githubusercontent.com/70752848/102713510-2be49000-430c-11eb-8ad7-9fc1aca328af.png">  
-
+    <img width="353" alt="스크린샷 2020-12-20 오후 9 40 16" src="https://user-images.githubusercontent.com/70752848/102713510-2be49000-430c-11eb-8ad7-9fc1aca328af.png"> 
+     
     > 이처럼 데이터를 불러오기 전까지 로딩 스핀이 보여짐  
 
     <img width="487" alt="스크린샷 2020-12-20 오후 9 41 34" src="https://user-images.githubusercontent.com/70752848/102713512-2dae5380-430c-11eb-83d2-616c4d498e74.png">
 
     > 데이터 호출이 설정한 0.5초 이상 지연시 isSlow 상태가 true 상태  
-    였다가 false로 전환된 상태
-    
+    > 였다가 false로 전환된 상태
+
   - makeFetchSaga 의 canCache 기능을 적용해 keyword를 검색할 때  
   중복적인 keyword 검색 이슈 제거하기 : 캐시된 검색 keyword는 더이상  
   중복 호출이 되지 않음
+
+## 6. SPA 초기 로딩 처리하기
+> 네트워크 지연시 Search -> User 페이지 전환 시 로딩 화면 처리  
+> SPA는 HTML에서 JS를 불러올 떄 생기는 로딩화면(백지) 상태로   
+> JS로 처리해주지 않고 HTML안에서 직접 처리해줘야 한다.
+- [Pure CSS Loaders](https://loading.io/css/) 사이트에서 로딩 소스를 가져옴
+- index.html 소스를 추가하고 FlexBox를 활용해서 로딩화면 가운데 정렬
+- 로딩이 길면 문제가 아니지만 짧을 시 애매한 출력으로 보기가 나쁨
+```html
+<script>
+      setTimeout(() => {
+        let loadingEl = document.getElementById('init-loading');
+        if (loadingEl) {
+          loadingEl.style.display = 'flex';
+        }
+      }, 500)
+    </script>
+```
+> 로딩 출력을 0.5초 이후로 설정해 짧은 로딩화면시 display: none으로 수정
+- 로딩 화면이 계속 렌더링되는 것을 `App.js`에서 처리
+```js
+useEffect(() => {
+    const bodyEl = document.getElementsByTagName('body')[0];
+    const loadingEl = document.getElementById('init-loading');
+    bodyEl.removeChild(loadingEl);
+  }, []);
+```
+> App.js 렌더링시 로딩 Element를 가져와 body에서 제거해줌
