@@ -147,5 +147,43 @@
   - **Reducer 생성**
     + SetFetchStatus 액션 발생 시 호출할 5가지 상태값 설정
     + 각 상태의 해당 actionType 또는 fetchKey를 설정
-    
+  - 마찬가지로 Redux Store에 commonReducer를 combine 함
+  - **makeFetchSaga의 기능을 수행할 fetch.js 코드 분석**
+    + 먼저, redux-helper에 `FETCH_KEY`와 `FETCH_PAGE` Immer 작성
+    + fetch 기능에 필요한 모든 요소들을 불러옴 : Fetch 상태값들, API 호출,  
+    fetch 액션들, FETCH_KEY&PAGE, 캐시를 저장할 lruCache
+    + makeFetchSaga 함수를 보면
+      + fetchSaga, canCache, getTotalCount 를 매개변수로 가짐
+      + fetchSaga 함수를 실행할 제너레이트한 객체를 생성
+      + **중요한 포인트는!** CallApi 함수를 호출하려할 때  
+      `setFetchStatus` 액션을 발생시킴( Success or Fail )
+      + 캐싱과 관련된 처리: `cacheKey`  
+      캐싱된 데이터가 있으면 캐싱된 Result 값을 가져와 사용
+      없다면 사가 미들웨어에 전달하고 API 호출
+      + makeFetchSlowSaga: 0.5초 이상 딜레이시 Slow 상태 설정
+      + 최종적으로, 응답된 apiResult(...params) 값을 받아서  
+      `yield put(...)`으로 설정
+  - **useFetchInfo hook 생성**
+    + actionType과 fetchKey 불러와 앞서 작성했던 fetch 관련  
+    상태값을 FetchStatus에 맞춰서 설정
+    + state 설정한 뒤 react-redux의 내장함수인 `shallowEqual`  
+    을 사용해 객체 안의 가장 겉에 있는 값들을 모두 비교해줌  
+    즉, state 상태인 fetchStatus, isFetching, isFetched 등을 비교
+  - **User Page에 적용하기**
+    + useFetchInfo 훅에 생성한 상태 표현 기능을 불러와 리덕스툴에  
+    상태를 표현해주도록 설정 : `isFetched? Success, Fail`
+    + 데이터 불러오기 지연시 로딩 Spin 활용 : `Ant-Disign: Spin`
+  - **결과 확인**
+    + 데이터 불러오기 성공 시 
+  <img width="378" alt="스크린샷 2020-12-20 오후 9 33 08" src="https://user-images.githubusercontent.com/70752848/102713350-04d98e80-430b-11eb-819b-4d7684757686.png">
+    + Network에 Slow 3G로 변경하고 IsSlow 상태 확인하기
+    <img width="353" alt="스크린샷 2020-12-20 오후 9 40 16" src="https://user-images.githubusercontent.com/70752848/102713510-2be49000-430c-11eb-8ad7-9fc1aca328af.png">  
+    > 이처럼 데이터를 불러오기 전까지 로딩 스핀이 보여짐  
 
+    <img width="487" alt="스크린샷 2020-12-20 오후 9 41 34" src="https://user-images.githubusercontent.com/70752848/102713512-2dae5380-430c-11eb-83d2-616c4d498e74.png">
+
+    > 데이터 호출이 설정한 0.5초 이상 지연시 isSlow 상태가 true 상태  
+    였다가 false로 전환된 상태
+  - makeFetchSaga 의 canCache 기능을 적용해 keyword를 검색할 때  
+  중복적인 keyword 검색 이슈 제거하기 : 캐시된 검색 keyword는 더이상  
+  중복 호출이 되지 않음

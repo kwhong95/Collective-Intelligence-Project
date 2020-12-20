@@ -14,7 +14,7 @@ export const Types = {
 export const actions = {
   setValue: createSetValueAction(Types.SetValue),
   setIsSlow: payload => ({ type: Types.SetIsSlow, payload }),
-  SetFetchStatus: payload => ({ type: Types.SetFetchStatus, payload }),
+  setFetchStatus: payload => ({ type: Types.SetFetchStatus, payload }),
 };
 
 const INITIAL_STATE = {
@@ -26,7 +26,6 @@ const INITIAL_STATE = {
     nextPageMap: {},
   },
 };
-
 const reducer = createReducer(INITIAL_STATE, {
   [Types.SetValue]: setValueReducer,
   [Types.SetFetchStatus]: (state, action) => {
@@ -42,7 +41,7 @@ const reducer = createReducer(INITIAL_STATE, {
       state.fetchInfo.fetchStatusMap[actionType] = {};
     }
     state.fetchInfo.fetchStatusMap[actionType][fetchKey] = status;
-    
+
     if (status !== FetchStatus.Request) {
       if (state.fetchInfo.isSlowMap[actionType]) {
         state.fetchInfo.isSlowMap[actionType][fetchKey] = false;
@@ -54,10 +53,10 @@ const reducer = createReducer(INITIAL_STATE, {
         state.fetchInfo.totalCountMap[actionType][fetchKey] = totalCount;
       }
       if (nextPage !== undefined) {
-        if (!state.fetchInfo.nextPage[actionType]) {
+        if (!state.fetchInfo.nextPageMap[actionType]) {
           state.fetchInfo.nextPageMap[actionType] = {};
         }
-        state.fetchInfo.nextPageMap[actionType] = nextPage;
+        state.fetchInfo.nextPageMap[actionType][fetchKey] = nextPage;
       }
       if (!state.fetchInfo.errorMessageMap[actionType]) {
         state.fetchInfo.errorMessageMap[actionType] = {};
@@ -75,5 +74,4 @@ const reducer = createReducer(INITIAL_STATE, {
     state.fetchInfo.isSlowMap[actionType][fetchKey] = isSlow;
   },
 });
-
 export default reducer;

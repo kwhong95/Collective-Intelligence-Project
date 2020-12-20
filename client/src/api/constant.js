@@ -5,9 +5,3 @@ export const FetchStatus = {
   Success: 'Success',
   Fail: 'Fail',
 };
-
-export const FetchStatus = {
-  Request: 'Request',
-  Success: 'Success',
-  Fail: 'Fail',
-};

@@ -1,6 +1,7 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { callApi } from '../../api/api';
 import { Types, actions } from '../state/user.state';
+import { makeFetchSaga } from '../util/fetch';
 
 function* fetchUser ({ name }) {
   const { isSuccess, data } = yield call(callApi, {
@@ -18,7 +19,6 @@ function* fetchUser ({ name }) {
 }
 
 export default function* () {
-  // yield all([takeEvery(Types.FetchUser, fetchUser)]);
   yield all([
     takeEvery(
       Types.FetchUser,
