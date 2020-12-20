@@ -178,15 +178,15 @@
     + 데이터 불러오기 성공 시 
   <img width="378" alt="스크린샷 2020-12-20 오후 9 33 08" src="https://user-images.githubusercontent.com/70752848/102713350-04d98e80-430b-11eb-819b-4d7684757686.png">
 
-    + Network에 Slow 3G로 변경하고 IsSlow 상태 확인하기
+   + Network에 Slow 3G로 변경하고 IsSlow 상태 확인하기
   <img width="353" alt="스크린샷 2020-12-20 오후 9 40 16" src="https://user-images.githubusercontent.com/70752848/102713510-2be49000-430c-11eb-8ad7-9fc1aca328af.png"> 
      
-    > 이처럼 데이터를 불러오기 전까지 로딩 스핀이 보여짐  
+   > 이처럼 데이터를 불러오기 전까지 로딩 스핀이 보여짐  
 
   <img width="487" alt="스크린샷 2020-12-20 오후 9 41 34" src="https://user-images.githubusercontent.com/70752848/102713512-2dae5380-430c-11eb-83d2-616c4d498e74.png">
 
-    > 데이터 호출이 설정한 0.5초 이상 지연시 isSlow 상태가 true 상태  
-    > 였다가 false로 전환된 상태
+   > 데이터 호출이 설정한 0.5초 이상 지연시 isSlow 상태가 true 상태  
+   > 였다가 false로 전환된 상태
 
   - makeFetchSaga 의 canCache 기능을 적용해 keyword를 검색할 때  
   중복적인 keyword 검색 이슈 제거하기 : 캐시된 검색 keyword는 더이상  
