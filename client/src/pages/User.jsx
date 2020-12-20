@@ -4,6 +4,9 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, Types } from '../redux/state/user.state';
 import useFetchInfo from '../hook/useFetchInfo';
+import Department from '../components/Department';
+import TagList from '../components/TagList';
+import History from '../components/History';
 
 /**
  * 
@@ -38,13 +41,19 @@ const User = ({ match }) => {
                 <Typography.Text>{user.name}</Typography.Text>
               </Descriptions.Item>
               <Descriptions.Item label="소속">
-                <Typography.Text>{user.department}</Typography.Text>
+                <Typography.Text>
+                  <Department />
+                </Typography.Text>
               </Descriptions.Item>
               <Descriptions.Item label="태그">
-                <Typography.Text>{user.tag}</Typography.Text>
+                <Typography.Text>
+                  <TagList />
+                </Typography.Text>
               </Descriptions.Item>
               <Descriptions.Item label="수정 내역">
-                <Typography.Text>수정 내역</Typography.Text>
+                <Typography.Text>
+                  <History />
+                </Typography.Text>
               </Descriptions.Item>
             </Descriptions>
           )}

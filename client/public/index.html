@@ -15,7 +15,7 @@
     <style>
       #init-loading {
         margin-top: 100px;
-        display: flex;
+        display: none;
         flex-direction: column;
         align-items: center;
       }
@@ -75,6 +75,14 @@
         }
       }
     </style>
+    <script>
+      setTimeout(() => {
+        let loadingEl = document.getElementById('init-loading');
+        if (loadingEl) {
+          loadingEl.style.display = 'flex';
+        }
+      }, 500)
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

@@ -174,6 +174,7 @@
     상태를 표현해주도록 설정 : `isFetched? Success, Fail`
     + 데이터 불러오기 지연시 로딩 Spin 활용 : `Ant-Disign: Spin`
   - **결과 확인**
+
     + 데이터 불러오기 성공 시 
   <img width="378" alt="스크린샷 2020-12-20 오후 9 33 08" src="https://user-images.githubusercontent.com/70752848/102713350-04d98e80-430b-11eb-819b-4d7684757686.png">
 
@@ -218,3 +219,39 @@ useEffect(() => {
   }, []);
 ```
 > App.js 렌더링시 로딩 Element를 가져와 body에서 제거해줌
+
+## 7. 사용자 정보 수정하기
+> 목표: 소속, 태그, 수정 내역을 컴포넌트로 생성 (수정 기능 구현)
+1. **Department.jsx**
+- `2가지 상태`를 설정
+  + 소속 내역을 버튼화 클릭시 수정모드로 전환하는 상태
+  + 수정한 데이터를 최신화하는 상태
+- `onEditDepartment`
+  + 수정 모드로 전환
+  + Input에 설정 되어 있는 소속 상태를 표기
+  + 클릭 시 바로 수정가능하도록 AutoFocus 설정 (autoFocus)
+  > 기본적으로 Ant-Design에서 제공하지만 굳이 로직을 만들면..
+  ```js
+  <Input
+  ref={ref => ref && ref.focus()}
+  ...
+  />
+  ```
+- `onSaveDepartment`
+  + 수정모드에서 Enter를 누를 때 동작하는 함수
+  + 수정한 내역이 비어있을 때
+    + 소속 값은 필수라는 에러 메세지 출력
+  + 수정한 내역이 있을 때
+    + 일단, DB의 정보를 수정할 redux에 `FetchUpdateUser` 타입 생성
+    + 수정을 실행할 Action 생성 + Saga에 수행 로직 구현
+  + 컴포넌트와의 연동
+    + 리덕스의 구현한 액션을 불러와 적용 시킴 : dispatch(actions...)
+  + *성능 이슈 발생!*
+    + 소속값을 수정한 이후 search 페이지로 돌아왔을 때  
+     autoComplete 부분에 소속값이 수정되어 있지 않음!
+    + 이유 : 이전 autoComplete 구현시 canCache를 true로 설정했기에  
+    이전 데이터가 캐시로 남아있기 때문
+    + 해결 : fetch.js의 `deleteApiCache`함수를 fetchUpdateUser  
+    성공 시 실행하도록 설정
+2. **TagList.jsx**
+3. **History.jsx**
