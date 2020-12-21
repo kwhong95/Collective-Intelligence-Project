@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { PageHeader, Row, Col, Descriptions, Typography, Spin, Space } from 'antd'
+import { PageHeader, Row, Col, Descriptions, Typography } from 'antd'
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, Types } from '../redux/state/user.state';
@@ -7,6 +7,7 @@ import useFetchInfo from '../hook/useFetchInfo';
 import Department from '../components/Department';
 import TagList from '../components/TagList';
 import History from '../components/History';
+import FetchLabel from '../components/FetchLabel';
 
 /**
  * 
@@ -24,28 +25,41 @@ const User = ({ match }) => {
     dispatch(actions.fetchUser(name));
   }, [dispatch, name]);
 
-  const { isFetched, isSlow } = useFetchInfo(Types.FetchUser);
+  const { isFetched } = useFetchInfo(Types.FetchUser);
 
   return (
     <Row justify="center">
       <Col xs={24} md={20} lg={14}>
         <PageHeader onBack={history.goBack} title={
-          <Space>
-            사용자 정보
-            {isSlow && <Spin size="small" />}
-          </Space>
+          <FetchLabel />
         } >
           {user && (
             <Descriptions layout="vertical" bordered column={1}>
               <Descriptions.Item label="이름">
                 <Typography.Text>{user.name}</Typography.Text>
               </Descriptions.Item>
-              <Descriptions.Item label="소속">
+              <Descriptions.Item 
+                label={
+                  <FetchLabel 
+                    label="소속" 
+                    actionType={Types.FetchUpdateUser} 
+                    fetchKey="department" 
+                  />
+                }
+              >
                 <Typography.Text>
                   <Department />
                 </Typography.Text>
               </Descriptions.Item>
-              <Descriptions.Item label="태그">
+              <Descriptions.Item 
+                label={
+                  <FetchLabel 
+                    label="태그" 
+                    actionType={Types.FetchUpdateUser} 
+                    fetchKey="tag" 
+                  />
+                }
+              >
                 <Typography.Text>
                   <TagList />
                 </Typography.Text>
