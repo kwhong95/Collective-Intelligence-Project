@@ -1,14 +1,15 @@
 import {
   createReducer,
   createSetValueAction,
-  FETCH_KEY,
   setValueReducer,
+  FETCH_KEY,
 } from '../redux-helper';
 
 export const Types = {
   SetValue: 'user/SetValue',
   FetchUser: 'user/FetchUser',
   FetchUpdateUser: 'user/FetchUpdateUser',
+  FetchUserHistory: 'user/FetchUserHistory',
 };
 
 export const actions = {
@@ -21,14 +22,14 @@ export const actions = {
     value,
     [FETCH_KEY]: fetchKey,
   }),
+  fetchUserHistory: name => ({ type: Types.FetchUserHistory, name }),
 };
 
 const INITIAL_STATE = {
   user: undefined,
-}
-
+  userHistory: [],
+};
 const reducer = createReducer(INITIAL_STATE, {
   [Types.SetValue]: setValueReducer,
 });
-
 export default reducer;
